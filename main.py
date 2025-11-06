@@ -1,14 +1,26 @@
+# main.py 상단부
+
 import discord
 from discord.ext import commands, tasks
 import os
+import sys # sys 모듈 추가
 import asyncio
 from supabase import create_client, Client
 
-# --- 환경 변수 설정 ---
-SUPABASE_URL = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
-DISCORD_TOKEN = os.environ.get("DISCORD_TOKEN")
-TARGET_CHANNEL_ID = int(os.environ.get("TARGET_CHANNEL_ID")) # 멤버 카운트 채널 ID
+# --- 환경 변수 설정 (오류 진단 기능 추가) ---
+try:
+    SUPABASE_URL = os.environ["SUPABASE_URL"]
+    SUPABASE_KEY = os.environ["SUPABASE_KEY"]
+    DISCORD_TOKEN = os.environ["DISCORD_TOKEN"]
+    TARGET_CHANNEL_ID = int(os.environ["TARGET_CHANNEL_ID"]) # 멤버 카운트 채널 ID
+except KeyError as e:
+    print(f"오류: 필수 환경 변수 '{e.args[0]}'가 설정되지 않았습니다.")
+    print("Railway의 'Variables' 탭에서 모든 환경 변수가 올바르게 설정되었는지 확인하세요.")
+    sys.exit(1) # 오류 발생 시 스크립트 종료
+except (ValueError, TypeError):
+    print(f"오류: TARGET_CHANNEL_ID 환경 변수가 올바른 숫자(채널 ID)가 아닙니다.")
+    sys.exit(1)
+
 
 # --- Supabase 클라이언트 생성 ---
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
