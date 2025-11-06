@@ -8,7 +8,7 @@ from supabase import create_client, Client
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 DISCORD_TOKEN = os.environ.get("DISCORD_TOKEN")
-TARGET_CHANNEL_ID = int(os.environ.get("1435963289556484099")) # 멤버 카운트 채널 ID
+TARGET_CHANNEL_ID = int(os.environ.get("TARGET_CHANNEL_ID")) # 멤버 카운트 채널 ID
 
 # --- Supabase 클라이언트 생성 ---
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
