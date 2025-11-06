@@ -1,13 +1,24 @@
+# cogs/auto_voice_cog.py
+
 import discord
 from discord.ext import commands
 import os
+import sys # sys 모듈 추가
 
 class AutoVoiceCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        # 환경 변수에서 채널 및 카테고리 ID를 가져옵니다.
-        self.trigger_channel_id = int(os.environ.get("AUTO_VOICE_TRIGGER_CHANNEL_ID"))
-        self.category_id = int(os.environ.get("AUTO_VOICE_CATEGORY_ID"))
+        try:
+            # 환경 변수에서 채널 및 카테고리 ID를 가져옵니다.
+            self.trigger_channel_id = int(os.environ["AUTO_VOICE_TRIGGER_CHANNEL_ID"])
+            self.category_id = int(os.environ["AUTO_VOICE_CATEGORY_ID"])
+        except KeyError as e:
+            print(f"[자동 음성 코그] 오류: 필수 환경 변수 '{e.args[0]}'가 설정되지 않았습니다.")
+            sys.exit(1)
+        except (ValueError, TypeError) as e:
+            print(f"[자동 음성 코그] 오류: 채널 ID 환경 변수가 올바른 숫자(채널 ID)가 아닙니다. ({e})")
+            sys.exit(1)
+
         # 봇이 생성한 채널의 ID를 추적하기 위한 세트(set)
         self.created_channels = set()
 
