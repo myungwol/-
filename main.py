@@ -29,6 +29,8 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 async def on_ready():
     print(f'{bot.user}으로 로그인 성공!')
     update_member_count.start() # 주기적 멤버 수 업데이트 시작
+    await bot.tree.sync() # <<<< 이 줄을 추가해주세요!
+    print("슬래시 커맨드를 성공적으로 동기화했습니다.")
 
 @bot.listen()
 async def on_member_join(member):
