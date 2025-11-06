@@ -1,16 +1,30 @@
+# cogs/log_cog.py
+
 import discord
 from discord.ext import commands
 import datetime
 import os
+import sys # sys 모듈 추가
 
 class LogCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        # 환경 변수에서 로그 채널 ID를 가져옵니다.
-        self.log_channel_id = int(os.environ.get("LOG_CHANNEL_ID"))
+        try:
+            # 3개의 각기 다른 로그 채널 ID를 환경 변수에서 가져옵니다.
+            self.member_log_channel_id = int(os.environ["MEMBER_LOG_CHANNEL_ID"])
+            self.message_log_channel_id = int(os.environ["MESSAGE_LOG_CHANNEL_ID"])
+            self.voice_log_channel_id = int(os.environ["VOICE_LOG_CHANNEL_ID"])
+        except KeyError as e:
+            print(f"[로그 코그] 오류: 필수 환경 변수 '{e.args[0]}'가 설정되지 않았습니다.")
+            sys.exit(1)
+        except (ValueError, TypeError) as e:
+            print(f"[로그 코그] 오류: 채널 ID 환경 변수가 올바른 숫자(채널 ID)가 아닙니다. ({e})")
+            sys.exit(1)
+
         # 서버별 초대 링크 정보를 저장할 딕셔너리
         self.invites = {}
 
+    # --- (이하 나머지 코드는 기존과 동일) ---
     # --- 이벤트 리스너 ---
 
     @commands.Cog.listener()
